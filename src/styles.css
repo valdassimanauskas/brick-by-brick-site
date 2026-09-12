@@ -57,7 +57,7 @@ p { margin: 0 0 1em; max-width: 62ch; }
 
 /* Hero: a pinned stage. Scrolling through it scrubs the build sequence (slab to
    finished house) behind the headline. Height = how long the build takes to scroll. */
-.hero { position: relative; height: 320svh; color: var(--dusk-ink); background: var(--dusk); }
+.hero { position: relative; height: 320svh; color: var(--dusk-ink); background: var(--dusk); margin-bottom: -1px; }
 .hero .stage { position: sticky; top: 0; height: 100svh; height: 100dvh; overflow: hidden; }
 .hero .stage > img, .hero .stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
 .hero .stage > img { opacity: 0; transition: opacity .35s linear; }

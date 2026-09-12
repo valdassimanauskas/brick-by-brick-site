@@ -10,10 +10,13 @@ export default function Nav() {
   useEffect(() => {
     const nav = ref.current;
     const hero = document.querySelector(".hero");
-    const solid = new IntersectionObserver(([e]) => nav.classList.toggle("solid", !e.isIntersecting), { rootMargin: "-80px 0px 0px 0px" });
+    // Safari and Chrome tint their browser chrome from theme-color; keep it matching the section under the nav
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const tint = (dark) => { if (meta) meta.setAttribute("content", dark ? "#15120f" : "#e9e4db"); };
+    const solid = new IntersectionObserver(([e]) => { nav.classList.toggle("solid", !e.isIntersecting); if (e.isIntersecting) tint(true); }, { rootMargin: "-80px 0px 0px 0px" });
     if (hero) solid.observe(hero);
     const theme = new IntersectionObserver((es) => {
-      es.forEach((e) => { if (e.isIntersecting) nav.classList.toggle("dark", e.target.dataset.theme === "dark"); });
+      es.forEach((e) => { if (e.isIntersecting) { const dark = e.target.dataset.theme === "dark"; nav.classList.toggle("dark", dark); tint(dark); } });
     }, { rootMargin: "-10px 0px -86% 0px" });
     document.querySelectorAll("[data-theme]").forEach((s) => theme.observe(s));
     return () => { solid.disconnect(); theme.disconnect(); };
