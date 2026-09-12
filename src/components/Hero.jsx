@@ -34,13 +34,25 @@ export default function Hero() {
   const draw = (p) => {
     const frames = framesRef.current, c = canvasRef.current;
     if (!frames || !c) return;
-    const img = frames[Math.min(frames.length - 1, Math.round(p * (frames.length - 1)))];
+    const fi = Math.min(frames.length - 1, Math.round(p * (frames.length - 1)));
+    const img = frames[fi];
     if (!img || !img.complete || !img.naturalWidth) return;
+    c.dataset.frame = fi;
     const ctx = c.getContext("2d");
     const cw = c.width, ch = c.height;
     const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
     const w = img.naturalWidth * s, h = img.naturalHeight * s;
     ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2 - h * 0.05, w, h);
+    sampleEdges(ctx, cw, ch);
+  };
+
+  // average colour of the top and bottom rows of the drawn frame -> --tint-top / --tint-bottom
+  const sampleEdges = (ctx, cw, ch) => {
+    const avg = (y) => { const d = ctx.getImageData(0, y, cw, 4).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < d.length; i += 16) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; } return `rgb(${(r / n) | 0},${(g / n) | 0},${(b / n) | 0})`; };
+    try {
+      document.documentElement.style.setProperty("--tint-top", avg(2));
+      document.documentElement.style.setProperty("--tint-bottom", avg(ch - 6));
+    } catch { /* tainted canvas etc. */ }
   };
 
   useEffect(() => {

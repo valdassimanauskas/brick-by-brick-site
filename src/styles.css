@@ -30,6 +30,14 @@ a { color: inherit; text-decoration: none; }
 :focus-visible { outline: 3px solid var(--brick); outline-offset: 3px; }
 .wrap { padding-inline: var(--gutter); max-width: 1520px; margin-inline: auto; }
 
+/* Edge tint strips (phones only): Safari 26 reads background-color from fixed elements within a few px of
+   the top/bottom edges, at least 80% wide and 3px tall. They sit behind everything; only Safari looks at them. */
+:root { --tint-top: #dfdfe2; --tint-bottom: #949c98; } /* measured sky / street of the first frame */
+.tint { display: none; position: fixed; left: 0; width: 100%; z-index: -1; pointer-events: none; }
+.tint-top { top: -4px; height: 12px; background-color: var(--tint-top); }
+.tint-bottom { bottom: -8px; min-height: 16px; background-color: var(--tint-bottom); }
+@supports (-webkit-touch-callout: none) { @media (max-width: 900px) { .tint { display: block; } } }
+
 /* Light sections paint their own ground (body is dark so iOS Safari's bar fallback matches the hero) */
 .promise, .services, .projects, .about, .reviews { background: var(--mortar); }
 
