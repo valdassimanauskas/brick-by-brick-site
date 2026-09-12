@@ -28,10 +28,8 @@ export default function App() {
     if (!ios || innerWidth >= 900 || location.search.includes("nobleed")) return;
     const html = document.documentElement;
     html.dataset.bleed = "1";
-    const offset = parseFloat(getComputedStyle(html).getPropertyValue("--bleed-offset")) || 62;
-    const nudge = () => { if (scrollY < offset) scrollTo({ top: offset, left: 0, behavior: "instant" }); };
-    nudge(); const t1 = setTimeout(nudge, 50); const t2 = setTimeout(nudge, 400);
-    return () => { clearTimeout(t1); clearTimeout(t2); delete html.dataset.bleed; };
+    // no pre-scroll: Safari only collapses its bars on a real user scroll, and a forced offset causes a snap on the way back up
+    return () => { delete html.dataset.bleed; };
   }, []);
   // one restrained reveal per section heading
   useEffect(() => {

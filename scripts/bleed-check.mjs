@@ -8,7 +8,7 @@ await p.goto(process.argv[2] || "http://localhost:4173/", { waitUntil: "networki
 await new Promise((r) => setTimeout(r, 1500));
 const m = () => p.evaluate(() => { const st = document.querySelector(".hero .stage").getBoundingClientRect(); const btn = document.querySelector(".hero-actions .brick-btn").getBoundingClientRect(); return { bleed: document.documentElement.dataset.bleed, scrollY, docScrolls: document.documentElement.scrollHeight > innerHeight, stageTop: Math.round(st.top), stageBottom: Math.round(st.bottom), stageH: Math.round(st.height), btnBottom: Math.round(btn.bottom), step: document.querySelector(".phase .step").textContent }; });
 console.log("load:", await m());
-await p.evaluate(() => { document.documentElement.style.scrollBehavior = "auto"; const h = document.querySelector(".hero"); scrollTo(0, 62 + 0.5 * (h.offsetHeight - innerHeight)); }); await new Promise((r) => setTimeout(r, 500));
+await p.evaluate(() => { document.documentElement.style.scrollBehavior = "auto"; const h = document.querySelector(".hero"); scrollTo(0, 0.5 * (h.offsetHeight - innerHeight)); }); await new Promise((r) => setTimeout(r, 500));
 console.log("mid:", await m());
 await p.screenshot({ path: "shots/m/bleed-mid.png" });
 await p.evaluate(() => scrollTo(0, document.querySelector("#services").getBoundingClientRect().top + scrollY + 10)); await new Promise((r) => setTimeout(r, 500));

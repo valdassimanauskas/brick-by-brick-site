@@ -38,12 +38,11 @@ a { color: inherit; text-decoration: none; }
 /* Bleed mode (iOS phones, set by JS): the document scrolls again, starts pre-scrolled by --bleed-offset so
    Safari collapses its bars to glass, and the hero stage is oversized so real photo pixels sit behind them.
    Technique from 1ar.io/updates/safari-26-liquid-glass-web. Disable with ?nobleed for comparison. */
-html[data-bleed] { --bleed-top: 62px; --bleed-bottom: 136px; --bleed-offset: 62px; height: auto; overflow-y: scroll; }
-html[data-bleed] body { height: auto; overflow: visible; min-height: calc(var(--vvh, 100dvh) + var(--bleed-offset)); }
+html[data-bleed] { --bleed-top: 0px; --bleed-bottom: 136px; --bleed-offset: 0px; height: auto; overflow-y: scroll; overscroll-behavior-y: none; }
+html[data-bleed] body { height: auto; overflow: visible; min-height: var(--vvh, 100dvh); overscroll-behavior-y: none; }
 html[data-bleed] #root { position: static; height: auto; overflow: visible; }
-html[data-bleed] .hero { margin-top: var(--bleed-offset); }
-html[data-bleed] .hero .stage { top: calc(-1 * var(--bleed-top)); margin-top: calc(-1 * var(--bleed-top)); height: calc(var(--vvh, 100dvh) + var(--bleed-top) + var(--bleed-bottom)); }
-html[data-bleed] .hero-copy { padding-top: var(--bleed-top); padding-bottom: calc(var(--bleed-bottom) + 28px); }
+html[data-bleed] .hero .stage { top: 0; height: calc(var(--vvh, 100dvh) + var(--bleed-bottom)); }
+html[data-bleed] .hero-copy { padding-bottom: calc(var(--bleed-bottom) + 28px); }
 html[data-bleed] .hero .stage::after { background: linear-gradient(180deg, rgba(21,18,15,.55) 0%, rgba(21,18,15,.2) 18%, rgba(21,18,15,.05) 34%, rgba(21,18,15,.15) 52%, rgba(21,18,15,.62) 74%, rgba(21,18,15,.74) 88%, rgba(21,18,15,.74) 100%); }
 
 /* Light sections paint their own ground (body is dark so iOS Safari's bar fallback matches the hero) */
