@@ -17,9 +17,10 @@
   --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+/* iOS paints the status-bar/overscroll area with the root background; keep it dark to match the hero */
+html { scroll-behavior: smooth; background: var(--dusk); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { margin: 0; background: var(--mortar); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { margin: 0; min-height: 100%; background: var(--mortar); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 img, video, canvas { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 :focus-visible { outline: 3px solid var(--brick); outline-offset: 3px; }
