@@ -1,0 +1,12 @@
+# secrets
+.env.kie
+.env*
+
+# generation artefacts (large, kept locally)
+generated/
+shots/
+
+# local tooling
+node_modules/
+.claude/settings.local.json
+*.log
