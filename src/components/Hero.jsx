@@ -50,9 +50,11 @@ export default function Hero() {
 
   // average colour of the top and bottom rows of the drawn frame -> --tint-top / --tint-bottom
   const sampleEdges = (ctx, cw, ch) => {
-    const avg = (y) => { const d = ctx.getImageData(0, y, cw, 4).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < d.length; i += 16) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; } return `rgb(${(r / n) | 0},${(g / n) | 0},${(b / n) | 0})`; };
+    // average a band of rows; the bottom band is taken a little way up (real asphalt, not the frame edge)
+    // and nudged darker and warmer so Safari's glass reads as road rather than brushed steel
+    const avg = (y, rows, k = 1, warm = 0) => { const d = ctx.getImageData(0, Math.max(0, y), cw, rows).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < d.length; i += 16) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; } return `rgb(${((r / n) * k + warm) | 0},${((g / n) * k) | 0},${((b / n) * k - warm) | 0})`; };
     try {
-      const top = avg(2), bottom = avg(ch - 6);
+      const top = avg(2, 6), bottom = avg(ch - Math.round(ch * 0.05), Math.round(ch * 0.03), 0.86, 6);
       const st = document.documentElement.style;
       st.setProperty("--tint-top", top); st.setProperty("--tint-bottom", bottom);
       document.querySelector('meta[name="theme-color"]')?.setAttribute("content", bottom);
