@@ -63,9 +63,10 @@ function sizeCanvas() {
 }
 async function loadFrames() {
   try {
-    const m = await (await fetch("assets/seq/manifest.json")).json();
+    const dir = innerWidth < 900 ? "assets/seq-m" : "assets/seq";
+    const m = await (await fetch(`${dir}/manifest.json`)).json();
     frameCount = m.count;
-    const list = Array.from({ length: frameCount }, (_, i) => { const img = new Image(); img.src = `assets/seq/${m.prefix}${String(i + 1).padStart(3, "0")}.${m.ext}`; return img; });
+    const list = Array.from({ length: frameCount }, (_, i) => { const img = new Image(); img.src = `${dir}/${m.prefix}${String(i + 1).padStart(3, "0")}.${m.ext}`; return img; });
     await Promise.all(list.slice(0, 8).map((im) => im.decode().catch(() => {})));
     frames = list; stills.forEach((s) => (s.hidden = true)); canvas.hidden = false; sizeCanvas();
   } catch { canvas.hidden = true; }
@@ -87,7 +88,7 @@ rows.forEach((r) => { r.addEventListener("mouseenter", () => activate(r.dataset.
 const hoverable = matchMedia("(hover: hover)").matches;
 function renderIndex() {
   if (hoverable) return;
-  const mid = innerHeight * 0.45;
+  const mid = innerHeight * 0.62; // below the sticky photo on phones
   let best = null, bestD = Infinity;
   rows.forEach((r) => { const b = r.getBoundingClientRect(); const d = Math.abs((b.top + b.bottom) / 2 - mid); if (d < bestD) { bestD = d; best = r; } });
   if (best) activate(best.dataset.img);
