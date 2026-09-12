@@ -20,11 +20,14 @@
 /* iOS paints the status-bar/overscroll area with the root background; keep it dark to match the hero */
 html { scroll-behavior: smooth; background: var(--dusk); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { margin: 0; min-height: 100%; background: var(--mortar); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { margin: 0; min-height: 100%; background: var(--dusk); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 img, video, canvas { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 :focus-visible { outline: 3px solid var(--brick); outline-offset: 3px; }
 .wrap { padding-inline: var(--gutter); max-width: 1520px; margin-inline: auto; }
+
+/* Light sections paint their own ground (body is dark so iOS Safari's bar fallback matches the hero) */
+.promise, .services, .projects, .about, .reviews { background: var(--mortar); }
 
 /* Type */
 h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: .95; letter-spacing: -.02em; margin: 0; font-stretch: 88%; }
@@ -59,7 +62,7 @@ p { margin: 0 0 1em; max-width: 62ch; }
 /* Hero: a pinned stage. Scrolling through it scrubs the build sequence (slab to
    finished house) behind the headline. Height = how long the build takes to scroll. */
 .hero { position: relative; height: 320svh; color: var(--dusk-ink); background: var(--dusk); margin-bottom: -1px; }
-.hero .stage { position: sticky; top: 0; height: 100svh; height: 100dvh; overflow: hidden; }
+.hero .stage { position: sticky; top: 0; height: 100svh; height: 100dvh; overflow: hidden; background-color: var(--dusk); }
 .hero .stage > img, .hero .stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
 .hero .stage > img { opacity: 0; transition: opacity .35s linear; }
 .hero .stage > img.on { opacity: 1; }
@@ -209,8 +212,9 @@ footer .brand svg { width: 36px; height: auto; }
   h2 { font-size: clamp(1.8rem, 7.5vw, 2.6rem); }
   .hero { height: 240svh; }
   .hero .stage > img, .hero .stage > canvas { object-position: 50% 40%; }
-  .hero .stage::after { background: linear-gradient(180deg, rgba(21,18,15,.45) 0%, rgba(21,18,15,.05) 28%, rgba(21,18,15,.15) 50%, rgba(21,18,15,.62) 78%, rgba(21,18,15,.72) 100%); }
-  .hero-copy { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+  .hero .stage::after { background: linear-gradient(180deg, rgba(21,18,15,.78) 0%, rgba(21,18,15,.35) 14%, rgba(21,18,15,.05) 32%, rgba(21,18,15,.15) 52%, rgba(21,18,15,.62) 78%, rgba(21,18,15,.74) 100%); }
+  .hero-copy { padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .nav { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
   .phase { margin-bottom: 12px; }
   .phase .step { font-size: .9rem; }
   .phase-name { font-size: .95rem; height: 2.7em; }
