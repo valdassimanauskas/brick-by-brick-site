@@ -1,0 +1,16 @@
+import puppeteer from "../../Rev/site/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js";
+const b = await puppeteer.launch({ executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe", headless: true });
+const p = await b.newPage();
+await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 26_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1");
+await p.setViewport({ width: 430, height: 932, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+const errors = []; p.on("pageerror", (e) => errors.push(String(e)));
+await p.goto(process.argv[2] || "http://localhost:4173/", { waitUntil: "networkidle0", timeout: 90000 });
+await new Promise((r) => setTimeout(r, 1500));
+const m = () => p.evaluate(() => { const st = document.querySelector(".hero .stage").getBoundingClientRect(); const btn = document.querySelector(".hero-actions .brick-btn").getBoundingClientRect(); return { bleed: document.documentElement.dataset.bleed, scrollY, docScrolls: document.documentElement.scrollHeight > innerHeight, stageTop: Math.round(st.top), stageBottom: Math.round(st.bottom), stageH: Math.round(st.height), btnBottom: Math.round(btn.bottom), step: document.querySelector(".phase .step").textContent }; });
+console.log("load:", await m());
+await p.evaluate(() => { document.documentElement.style.scrollBehavior = "auto"; const h = document.querySelector(".hero"); scrollTo(0, 62 + 0.5 * (h.offsetHeight - innerHeight)); }); await new Promise((r) => setTimeout(r, 500));
+console.log("mid:", await m());
+await p.screenshot({ path: "shots/m/bleed-mid.png" });
+await p.evaluate(() => scrollTo(0, document.querySelector("#services").getBoundingClientRect().top + scrollY + 10)); await new Promise((r) => setTimeout(r, 500));
+console.log("services nav:", await p.evaluate(() => document.querySelector(".nav").className), "errors:", errors);
+await b.close();

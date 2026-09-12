@@ -84,7 +84,8 @@ export default function Hero() {
     const el = heroRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const p = reducedMotion() ? 1 : Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+    const vh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--vvh")) || innerHeight;
+    const p = reducedMotion() ? 1 : Math.min(1, Math.max(0, -r.top / (r.height - vh)));
     setProgress(p);
     setPhase(p < 0.34 ? 0 : p < 0.72 ? 1 : 2);
     draw(p);
