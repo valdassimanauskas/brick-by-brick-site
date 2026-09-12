@@ -58,12 +58,12 @@ p { margin: 0 0 1em; max-width: 62ch; }
 /* Hero: a pinned stage. Scrolling through it scrubs the build sequence (slab to
    finished house) behind the headline. Height = how long the build takes to scroll. */
 .hero { position: relative; height: 320svh; color: var(--dusk-ink); background: var(--dusk); }
-.hero .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.hero .stage { position: sticky; top: 0; height: 100svh; height: 100dvh; overflow: hidden; }
 .hero .stage > img, .hero .stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
 .hero .stage > img { opacity: 0; transition: opacity .35s linear; }
 .hero .stage > img.on { opacity: 1; }
 .hero .stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(21,18,15,.45) 0%, rgba(21,18,15,.05) 35%, rgba(21,18,15,.1) 55%, rgba(21,18,15,.88) 100%); pointer-events: none; }
-.hero-copy { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: clamp(40px, 6vh, 72px); }
+.hero-copy { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: clamp(40px, 6vh, 72px); padding-bottom: max(clamp(40px, 6vh, 72px), env(safe-area-inset-bottom)); }
 .phase { display: grid; gap: 4px; margin-bottom: 18px; font-family: var(--display); font-weight: 700; }
 .phase .step { display: inline-flex; align-items: center; gap: 10px; color: var(--dusk-ink); font-size: 1.05rem; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
 .phase .step::before { content: ""; display: inline-block; width: 22px; height: 10px; background: var(--brick); }
@@ -181,7 +181,7 @@ form input::placeholder, form textarea::placeholder { color: rgba(236,231,223,.3
 .chips input:checked + span { background: var(--brick); border-color: var(--brick); }
 .chips input:focus-visible + span { outline: 3px solid var(--brick); outline-offset: 2px; }
 /* stack + wall exist only on phones */
-.stack, .wall { display: none; }
+.rail, .wall-row { display: none; }
 form .brick-btn { grid-column: 1 / -1; justify-self: start; }
 
 /* Footer */
@@ -208,8 +208,8 @@ footer .brand svg { width: 36px; height: auto; }
   h2 { font-size: clamp(1.8rem, 7.5vw, 2.6rem); }
   .hero { height: 240svh; }
   .hero .stage > img, .hero .stage > canvas { object-position: 50% 40%; }
-  .hero .stage::after { background: linear-gradient(180deg, rgba(21,18,15,.5) 0%, rgba(21,18,15,.08) 30%, rgba(21,18,15,.2) 50%, rgba(21,18,15,.92) 100%); }
-  .hero-copy { padding-bottom: 28px; }
+  .hero .stage::after { background: linear-gradient(180deg, rgba(21,18,15,.45) 0%, rgba(21,18,15,.05) 28%, rgba(21,18,15,.15) 50%, rgba(21,18,15,.62) 78%, rgba(21,18,15,.72) 100%); }
+  .hero-copy { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
   .phase { margin-bottom: 12px; }
   .phase .step { font-size: .9rem; }
   .phase-name { font-size: .95rem; height: 2.7em; }
@@ -224,21 +224,20 @@ footer .brand svg { width: 36px; height: auto; }
   .facts strong { font-size: 1.6rem; }
   .sec-head { gap: 12px; margin-bottom: 24px; }
   .index { display: none; }
-  /* The wall: each service is a brick that slides in and settles on the previous one */
-  .stack { display: block; position: relative; padding-bottom: 8px; }
-  .brick-card { position: sticky; top: calc(64px + var(--i) * 12px); margin-bottom: 18px; background: var(--mortar-2); box-shadow: 0 -1px 0 var(--joint), 0 12px 30px rgba(26,23,20,.22); transform-origin: 50% 0; transition: transform .35s cubic-bezier(.2,.7,.2,1), filter .35s ease-out; }
-  .brick-card:nth-child(even) { margin-left: 8px; }
-  .brick-card:nth-child(odd) { margin-right: 8px; }
+  /* Services on phones: a native swipe rail. Each card is a brick; the wall below fills as you swipe. */
+  .services .wrap { padding-inline: 0; }
+  .services .sec-head { padding-inline: var(--gutter); }
+  .rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px var(--gutter) 12px; scroll-padding-inline: var(--gutter); -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .rail::-webkit-scrollbar { display: none; }
+  .brick-card { flex: 0 0 82%; scroll-snap-align: start; background: var(--mortar-2); display: grid; grid-template-rows: auto 1fr; }
   .brick-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
   .bc-txt { padding: 14px 16px 18px; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline; }
   .bc-txt .n { font-family: var(--display); font-weight: 700; color: var(--brick); font-size: .9rem; }
-  .bc-txt h3 { font-size: 1.25rem; }
+  .bc-txt h3 { font-size: 1.2rem; }
   .bc-txt p { grid-column: 2; margin: 0; color: var(--ink-2); font-size: .92rem; }
-  .brick-card.under { transform: scale(.96) translateY(-4px); filter: brightness(.72); }
-  .brick-card.landing { animation: settle .32s cubic-bezier(.2,.7,.2,1); }
-  @keyframes settle { 0% { transform: translateY(14px); } 60% { transform: translateY(-3px); } 100% { transform: none; } }
-  .wall { display: grid; gap: 3px; position: fixed; right: 14px; bottom: 14px; z-index: 5; opacity: 0; transition: opacity .3s; pointer-events: none; }
-  .wall.show { opacity: 1; }
+  .wall-row { display: flex; align-items: center; justify-content: space-between; padding: 8px var(--gutter) 0; }
+  .wall-row span { font-family: var(--display); font-weight: 700; font-size: .9rem; color: var(--ink-2); }
+  .wall { display: grid; gap: 3px; }
   .wall .row { display: flex; gap: 3px; justify-content: center; }
   .wall i { display: block; width: 22px; height: 10px; background: rgba(26,23,20,.15); transition: background .2s; }
   .wall i.laid { background: var(--brick); }

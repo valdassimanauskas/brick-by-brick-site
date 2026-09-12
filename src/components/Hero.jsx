@@ -26,7 +26,7 @@ export default function Hero() {
   const sizeCanvas = () => {
     const c = canvasRef.current, s = stageRef.current;
     if (!c || !s) return;
-    const dpr = Math.min(devicePixelRatio, isPhone() ? 1.5 : 2);
+    const dpr = Math.min(devicePixelRatio || 1, 3);
     c.width = Math.round(s.clientWidth * dpr);
     c.height = Math.round(s.clientHeight * dpr);
   };

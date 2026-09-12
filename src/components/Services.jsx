@@ -1,44 +1,42 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { services, asset } from "../data.js";
 import { useScroll } from "../hooks/useScroll.js";
 
 /* Desktop: an index list with a sticky photo that follows hover/focus.
-   Phones: each service is a brick card that slides in and settles on the last,
-   with a small wall in the corner that gains a brick per card. */
+   Phones: a native swipe rail. Each service is a brick; the small wall under the
+   rail gains a brick for every card you have swiped to. */
 export default function Services() {
   const [active, setActive] = useState(services[0].key);
-  const listRef = useRef(null), stackRef = useRef(null);
-  const [laid, setLaid] = useState(0);
-  const [under, setUnder] = useState({});
-  const [showWall, setShowWall] = useState(false);
-  const landed = useRef(new Set());
-  const [landing, setLanding] = useState({});
+  const listRef = useRef(null), railRef = useRef(null);
+  const [laid, setLaid] = useState(1);
 
+  // desktop without hover (touch laptops): the row nearest the photo becomes active
   useScroll(() => {
-    const hoverable = matchMedia("(hover: hover)").matches;
-    const list = listRef.current, stack = stackRef.current;
-    if (!hoverable && list && getComputedStyle(list).display !== "none") {
-      const mid = innerHeight * 0.62;
-      let best = null, bestD = Infinity;
-      list.querySelectorAll("a").forEach((r) => { const b = r.getBoundingClientRect(); const d = Math.abs((b.top + b.bottom) / 2 - mid); if (d < bestD) { bestD = d; best = r; } });
-      if (best) setActive(best.dataset.img);
-    }
-    if (stack && getComputedStyle(stack).display !== "none") {
-      const cards = [...stack.querySelectorAll(".brick-card")];
-      let count = 0; const u = {}; const l = {};
-      cards.forEach((c, i) => {
-        const r = c.getBoundingClientRect();
-        const settled = r.top <= 64 + i * 12 + 1;
-        if (settled) count++;
-        u[i] = !!(settled && cards[i + 1] && cards[i + 1].getBoundingClientRect().top < r.top + r.height * 0.5);
-        if (settled && !landed.current.has(i)) { landed.current.add(i); l[i] = true; setTimeout(() => setLanding((s) => ({ ...s, [i]: false })), 380); }
-      });
-      setLaid(count); setUnder(u);
-      if (Object.keys(l).length) setLanding((s) => ({ ...s, ...l }));
-      const sr = stack.getBoundingClientRect();
-      setShowWall(sr.top < innerHeight * 0.6 && sr.bottom > innerHeight * 0.4);
-    }
+    const list = listRef.current;
+    if (matchMedia("(hover: hover)").matches || !list || getComputedStyle(list).display === "none") return;
+    const mid = innerHeight * 0.62;
+    let best = null, bestD = Infinity;
+    list.querySelectorAll("a").forEach((r) => { const b = r.getBoundingClientRect(); const d = Math.abs((b.top + b.bottom) / 2 - mid); if (d < bestD) { bestD = d; best = r; } });
+    if (best) setActive(best.dataset.img);
   });
+
+  // rail: count how many cards have been swiped past
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(() => {
+        const card = rail.querySelector(".brick-card");
+        const step = card ? card.offsetWidth + 12 : 1;
+        setLaid(Math.min(services.length, Math.round(rail.scrollLeft / step) + 1));
+        ticking = false;
+      });
+    };
+    rail.addEventListener("scroll", onScroll, { passive: true });
+    return () => rail.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <section className="services" id="services" data-theme="light">
@@ -65,19 +63,22 @@ export default function Services() {
           </div>
         </div>
 
-        <div className="stack" ref={stackRef}>
+        <div className="rail" ref={railRef} aria-label="Services, swipe to browse">
           {services.map((s, i) => (
-            <article key={s.key} className={`brick-card${under[i] ? " under" : ""}${landing[i] ? " landing" : ""}`} style={{ "--i": i }}>
+            <article key={s.key} className="brick-card">
               <img src={asset(`svc-${s.key}.webp`)} alt="" loading="lazy" />
               <div className="bc-txt"><span className="n">{String(i + 1).padStart(2, "0")}</span><h3>{s.title}</h3><p>{s.desc}</p></div>
             </article>
           ))}
         </div>
-        <div className={`wall${showWall ? " show" : ""}`} aria-hidden="true">
-          {[2, 3, 4].map((n, row) => {
-            const start = row === 0 ? 0 : row === 1 ? 2 : 5;
-            return <div className="row" key={row}>{Array.from({ length: n }, (_, i) => <i key={i} className={start + i < laid ? "laid" : ""} />)}</div>;
-          })}
+        <div className="wall-row">
+          <span>{laid} of {services.length} · swipe</span>
+          <div className="wall" aria-hidden="true">
+            {[2, 3, 4].map((n, row) => {
+              const start = row === 0 ? 0 : row === 1 ? 2 : 5;
+              return <div className="row" key={row}>{Array.from({ length: n }, (_, i) => <i key={i} className={start + i < laid ? "laid" : ""} />)}</div>;
+            })}
+          </div>
         </div>
       </div>
     </section>
