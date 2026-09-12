@@ -33,9 +33,9 @@ a { color: inherit; text-decoration: none; }
 /* Edge tint strips (phones only): Safari 26 reads background-color from fixed elements within a few px of
    the top/bottom edges, at least 80% wide and 3px tall. They sit behind everything; only Safari looks at them. */
 :root { --tint-top: #dfdfe2; --tint-bottom: #949c98; } /* measured sky / street of the first frame */
-.tint { display: none; position: fixed; left: 0; width: 100%; z-index: -1; pointer-events: none; }
-.tint-top { top: -4px; height: 12px; background-color: var(--tint-top); }
-.tint-bottom { bottom: -8px; min-height: 16px; background-color: var(--tint-bottom); }
+.tint { display: none; position: fixed; left: 0; width: 100%; z-index: 30; pointer-events: none; }
+.tint-top { top: -6px; height: 8px; background-color: var(--tint-top); }
+.tint-bottom { bottom: -10px; min-height: 12px; background-color: var(--tint-bottom); }
 @supports (-webkit-touch-callout: none) { @media (max-width: 900px) { .tint { display: block; } } }
 
 /* Light sections paint their own ground (body is dark so iOS Safari's bar fallback matches the hero) */
@@ -74,7 +74,7 @@ p { margin: 0 0 1em; max-width: 62ch; }
 /* Hero: a pinned stage. Scrolling through it scrubs the build sequence (slab to
    finished house) behind the headline. Height = how long the build takes to scroll. */
 .hero { position: relative; height: 320dvh; height: calc(var(--vvh, 100dvh) * 3.2); color: var(--dusk-ink); background: var(--dusk); margin-bottom: -1px; }
-.hero .stage { position: sticky; top: 0; height: 100dvh; height: var(--vvh, 100dvh); overflow: hidden; background-color: var(--dusk); }
+.hero .stage { position: sticky; top: 0; height: 100dvh; height: var(--vvh, 100dvh); overflow: hidden; background-color: transparent; } /* transparent on purpose: Safari samples sticky edge elements for its bar tint */
 .hero .stage > img, .hero .stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
 .hero .stage > img { opacity: 0; transition: opacity .35s linear; }
 .hero .stage > img.on { opacity: 1; }
