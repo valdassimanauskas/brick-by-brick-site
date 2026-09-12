@@ -42,7 +42,9 @@ export default function Hero() {
     const cw = c.width, ch = c.height;
     const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
     const w = img.naturalWidth * s, h = img.naturalHeight * s;
-    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2 - h * 0.05, w, h);
+    // lift the horizon a little, but never past the point where the frame stops covering the canvas
+    const shift = Math.max(0, Math.min(h * 0.05, (h - ch) / 2));
+    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2 - shift, w, h);
     sampleEdges(ctx, cw, ch);
   };
 
