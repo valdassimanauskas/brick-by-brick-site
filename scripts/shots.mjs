@@ -1,6 +1,6 @@
 import puppeteer from "../../Rev/site/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js";
 import { mkdirSync } from "node:fs";
-const url = process.argv[2] || "http://localhost:8787/index.html";
+const url = process.argv[2] || "http://localhost:4173/";
 const out = process.argv[3] || "shots";
 mkdirSync(out, { recursive: true });
 const browser = await puppeteer.launch({ executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe", headless: true });

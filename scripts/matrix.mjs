@@ -1,6 +1,6 @@
 import puppeteer from "../../Rev/site/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js";
 import { mkdirSync } from "node:fs";
-const url = process.argv[2] || "http://localhost:8787/index.html";
+const url = process.argv[2] || "http://localhost:4173/";
 mkdirSync("shots/m", { recursive: true });
 const devices = [
   ["se", 375, 667, true], ["se-toolbar", 375, 553, true], ["i14", 390, 844, true], ["i14-toolbar", 390, 734, true],
@@ -32,13 +32,17 @@ for (const [name, w, h, mobile] of devices) {
   await new Promise((r) => setTimeout(r, 400));
   const svc = await page.evaluate(() => ({ active: document.querySelector(".index-stage img.on")?.dataset.img, stageTop: Math.round(document.querySelector(".index-stage").getBoundingClientRect().top) }));
   await page.screenshot({ path: `shots/m/${name}-services.png` });
+  await page.evaluate(() => { const st = document.querySelector(".stack"); if (st && getComputedStyle(st).display !== "none") scrollTo(0, st.getBoundingClientRect().top + scrollY + st.offsetHeight * 0.55); });
+  await new Promise((r) => setTimeout(r, 400));
+  const wall = await page.evaluate(() => ({ wallShown: !!document.querySelector(".wall.show"), laid: document.querySelectorAll(".wall i.laid").length, under: document.querySelectorAll(".brick-card.under").length }));
+  await page.screenshot({ path: `shots/m/${name}-stack.png` });
   await page.evaluate(() => scrollTo(0, document.querySelector("#contact").getBoundingClientRect().top + scrollY - 60));
   await new Promise((r) => setTimeout(r, 400));
   await page.screenshot({ path: `shots/m/${name}-contact.png` });
   // link check
   await page.evaluate(() => { scrollTo(0, 0); document.querySelector('.hero-actions a[href="#projects"]').click(); }); await new Promise((r) => setTimeout(r, 300));
   const linkOk = await page.evaluate(() => Math.abs(document.querySelector("#projects").getBoundingClientRect().top) < 5);
-  rows.push({ name, w, h, ...top, mid, svc: svc.active, stageTop: svc.stageTop, linkOk, errors: errors.length });
+  rows.push({ name, w, h, ...top, mid, svc: svc.active, ...wall, linkOk, errors: errors.length });
   await page.close();
 }
 console.table(rows);

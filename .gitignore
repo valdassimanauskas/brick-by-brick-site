@@ -10,3 +10,5 @@ shots/
 node_modules/
 .claude/settings.local.json
 *.log
+node_modules/
+dist/

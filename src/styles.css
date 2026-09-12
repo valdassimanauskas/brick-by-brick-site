@@ -172,6 +172,16 @@ form label.full { grid-column: 1 / -1; }
 form input, form select, form textarea { font: inherit; color: var(--dusk-ink); background: rgba(236,231,223,.06); border: 1px solid var(--joint-dark); padding: 12px 14px; width: 100%; }
 form input:focus, form select:focus, form textarea:focus { outline: none; border-color: var(--brick); }
 form textarea { min-height: 120px; resize: vertical; }
+form input::placeholder, form textarea::placeholder { color: rgba(236,231,223,.35); }
+.chips { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips legend { padding: 0; margin-bottom: 8px; font-size: .9rem; color: var(--dusk-ink-2); }
+.chips label { display: inline-block; }
+.chips input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chips span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 1px solid var(--joint-dark); color: var(--dusk-ink); font-family: var(--display); font-weight: 700; font-size: .95rem; cursor: pointer; transition: background .15s, border-color .15s; }
+.chips input:checked + span { background: var(--brick); border-color: var(--brick); }
+.chips input:focus-visible + span { outline: 3px solid var(--brick); outline-offset: 2px; }
+/* stack + wall exist only on phones */
+.stack, .wall { display: none; }
 form .brick-btn { grid-column: 1 / -1; justify-self: start; }
 
 /* Footer */
@@ -196,7 +206,7 @@ footer .brand svg { width: 36px; height: auto; }
   .nav .brick-btn { min-height: 40px; padding-inline: 14px; font-size: .9rem; }
   h1 { font-size: clamp(1.9rem, 8.2vw, 2.6rem); max-width: none; }
   h2 { font-size: clamp(1.8rem, 7.5vw, 2.6rem); }
-  .hero { height: 300svh; }
+  .hero { height: 240svh; }
   .hero .stage > img, .hero .stage > canvas { object-position: 50% 40%; }
   .hero .stage::after { background: linear-gradient(180deg, rgba(21,18,15,.5) 0%, rgba(21,18,15,.08) 30%, rgba(21,18,15,.2) 50%, rgba(21,18,15,.92) 100%); }
   .hero-copy { padding-bottom: 28px; }
@@ -213,7 +223,25 @@ footer .brand svg { width: 36px; height: auto; }
   .promise .grid, .about .grid, .contact .grid, .index { grid-template-columns: 1fr; gap: 28px; }
   .facts strong { font-size: 1.6rem; }
   .sec-head { gap: 12px; margin-bottom: 24px; }
-  .index-stage { position: sticky; top: 64px; z-index: 1; aspect-ratio: 16 / 10; order: -1; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+  .index { display: none; }
+  /* The wall: each service is a brick that slides in and settles on the previous one */
+  .stack { display: block; position: relative; padding-bottom: 8px; }
+  .brick-card { position: sticky; top: calc(64px + var(--i) * 12px); margin-bottom: 18px; background: var(--mortar-2); box-shadow: 0 -1px 0 var(--joint), 0 12px 30px rgba(26,23,20,.22); transform-origin: 50% 0; transition: transform .35s cubic-bezier(.2,.7,.2,1), filter .35s ease-out; }
+  .brick-card:nth-child(even) { margin-left: 8px; }
+  .brick-card:nth-child(odd) { margin-right: 8px; }
+  .brick-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .bc-txt { padding: 14px 16px 18px; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline; }
+  .bc-txt .n { font-family: var(--display); font-weight: 700; color: var(--brick); font-size: .9rem; }
+  .bc-txt h3 { font-size: 1.25rem; }
+  .bc-txt p { grid-column: 2; margin: 0; color: var(--ink-2); font-size: .92rem; }
+  .brick-card.under { transform: scale(.96) translateY(-4px); filter: brightness(.72); }
+  .brick-card.landing { animation: settle .32s cubic-bezier(.2,.7,.2,1); }
+  @keyframes settle { 0% { transform: translateY(14px); } 60% { transform: translateY(-3px); } 100% { transform: none; } }
+  .wall { display: grid; gap: 3px; position: fixed; right: 14px; bottom: 14px; z-index: 5; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .wall.show { opacity: 1; }
+  .wall .row { display: flex; gap: 3px; justify-content: center; }
+  .wall i { display: block; width: 22px; height: 10px; background: rgba(26,23,20,.15); transition: background .2s; }
+  .wall i.laid { background: var(--brick); }
   .index-list a { grid-template-columns: 2.4rem 1fr; padding: 14px 8px 14px 0; }
   .index-list .t { font-size: 1.25rem; }
   .index-list .d { max-height: none; opacity: 1; margin-top: 4px; font-size: .9rem; }

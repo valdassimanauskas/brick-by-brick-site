@@ -3,7 +3,7 @@ const browser = await puppeteer.launch({ executablePath: "C:/Program Files/Googl
 const page = await browser.newPage();
 const errors = []; page.on("pageerror", (e) => errors.push(String(e)));
 await page.setViewport({ width: 1440, height: 900 });
-await page.goto("http://localhost:8787/index.html", { waitUntil: "networkidle0", timeout: 90000 });
+await page.goto(process.argv[2] || "http://localhost:4173/", { waitUntil: "networkidle0", timeout: 90000 });
 await page.evaluate(() => { document.documentElement.style.scrollBehavior = "auto"; });
 await new Promise((r) => setTimeout(r, 2000));
 const h = await page.evaluate(() => ({ heroH: document.querySelector(".hero").offsetHeight, canvasHidden: document.querySelector(".hero canvas").hidden, words: [...document.querySelectorAll(".lay .w > span")].every((s) => getComputedStyle(s).opacity === "1") }));
