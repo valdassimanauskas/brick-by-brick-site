@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 66" width="120" height="66" role="img" aria-label="Brick by Brick mark">
+  <g fill="#8f3a24">
+    <rect x="0"  y="44" width="38" height="22"/>
+    <rect x="41" y="44" width="38" height="22"/>
+    <rect x="82" y="44" width="38" height="22"/>
+    <rect x="20.5" y="22" width="38" height="19"/>
+    <rect x="61.5" y="22" width="38" height="19"/>
+    <rect x="41" y="0" width="38" height="19"/>
+  </g>
+</svg>
