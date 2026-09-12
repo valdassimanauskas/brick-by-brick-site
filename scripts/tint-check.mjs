@@ -3,7 +3,7 @@ const b = await puppeteer.launch({ executablePath: "C:/Program Files/Google/Chro
 const p = await b.newPage(); await p.setViewport({ width: 430, height: 932, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
 await p.goto(process.argv[2] || "http://localhost:4173/", { waitUntil: "networkidle0", timeout: 90000 });
 await new Promise((r) => setTimeout(r, 1500));
-const read = () => p.evaluate(() => { const st = document.documentElement.style; return { top: st.getPropertyValue("--tint-top") || getComputedStyle(document.documentElement).getPropertyValue("--tint-top"), bottom: st.getPropertyValue("--tint-bottom") || getComputedStyle(document.documentElement).getPropertyValue("--tint-bottom"), strips: document.querySelectorAll(".tint").length }; });
+const read = () => p.evaluate(() => { const st = document.documentElement.style; return { top: st.getPropertyValue("--tint-top") || getComputedStyle(document.documentElement).getPropertyValue("--tint-top"), bottom: st.getPropertyValue("--tint-bottom") || getComputedStyle(document.documentElement).getPropertyValue("--tint-bottom"), bodyBg: getComputedStyle(document.body).backgroundColor, meta: document.querySelector("meta[name=theme-color]").content }; });
 const root = () => p.evaluate(() => document.getElementById("root"));
 console.log("hero start:", await read());
 await p.evaluate(() => { const r = document.getElementById("root"); r.style.scrollBehavior = "auto"; r.scrollTo(0, 0.9 * (document.querySelector(".hero").offsetHeight - innerHeight)); }); await new Promise((r) => setTimeout(r, 500));

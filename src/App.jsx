@@ -30,10 +30,6 @@ export default function App() {
   }, []);
   return (
     <>
-      {/* iOS Safari tints its bars from fixed elements at the screen edges. These strips carry the
-          colour of the photo's sky (top) and street (bottom) so the bars read as part of the image. */}
-      <div className="tint tint-top" aria-hidden="true" />
-      <div className="tint tint-bottom" aria-hidden="true" />
       <Nav />
       <Hero />
       <PromiseSection />

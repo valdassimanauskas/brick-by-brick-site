@@ -20,23 +20,20 @@
 /* The document never scrolls. The whole site scrolls inside #root, a fixed full-viewport
    container (same technique as spikeblocks.com/physics). iOS Safari then keeps its bars
    as glass over the content instead of expanding them and painting a fallback strip. */
-html { height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--dusk); }
+html { height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--tint-top); }
 #root { position: relative; height: 100%; height: var(--vvh, 100%); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; background: var(--dusk); }
 @media (prefers-reduced-motion: reduce) { #root { scroll-behavior: auto; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--dusk); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--tint-top); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 img, video, canvas { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 :focus-visible { outline: 3px solid var(--brick); outline-offset: 3px; }
 .wrap { padding-inline: var(--gutter); max-width: 1520px; margin-inline: auto; }
 
-/* Edge tint strips (phones only): Safari 26 reads background-color from fixed elements within a few px of
-   the top/bottom edges, at least 80% wide and 3px tall. They sit behind everything; only Safari looks at them. */
-:root { --tint-top: #dfdfe2; --tint-bottom: #949c98; } /* measured sky / street of the first frame */
-.tint { display: none; position: fixed; left: 0; width: 100%; z-index: 30; pointer-events: none; }
-.tint-top { top: -6px; height: 8px; background-color: var(--tint-top); }
-.tint-bottom { bottom: -10px; min-height: 12px; background-color: var(--tint-bottom); }
-@supports (-webkit-touch-callout: none) { @media (max-width: 900px) { .tint { display: block; } } }
+/* iOS Safari (observed on iOS 26): the status-bar area takes the BODY background colour and the
+   bottom toolbar takes the theme-color meta. Both are driven live from the hero frame's edges
+   (sky / street) via --tint-top / --tint-bottom, and from the section colour elsewhere. */
+:root { --tint-top: #dfdfe2; --tint-bottom: #949c98; }
 
 /* Light sections paint their own ground (body is dark so iOS Safari's bar fallback matches the hero) */
 .promise, .services, .projects, .about, .reviews { background: var(--mortar); }

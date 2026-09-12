@@ -18,7 +18,7 @@ export default function Nav() {
       document.documentElement.style.setProperty("--tint-top", c);
       document.documentElement.style.setProperty("--tint-bottom", c);
     };
-    const heroTint = () => { document.documentElement.style.setProperty("--tint-top", "#dfdfe2"); document.documentElement.style.setProperty("--tint-bottom", "#949c98"); };
+    const heroTint = () => { document.documentElement.style.setProperty("--tint-top", "#dfdfe2"); document.documentElement.style.setProperty("--tint-bottom", "#949c98"); if (meta) meta.setAttribute("content", "#949c98"); };
     const solid = new IntersectionObserver(([e]) => { nav.classList.toggle("solid", !e.isIntersecting); if (e.isIntersecting) heroTint(); }, { rootMargin: "-80px 0px 0px 0px" });
     if (hero) solid.observe(hero);
     const theme = new IntersectionObserver((es) => {

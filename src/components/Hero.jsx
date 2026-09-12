@@ -52,8 +52,10 @@ export default function Hero() {
   const sampleEdges = (ctx, cw, ch) => {
     const avg = (y) => { const d = ctx.getImageData(0, y, cw, 4).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < d.length; i += 16) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; } return `rgb(${(r / n) | 0},${(g / n) | 0},${(b / n) | 0})`; };
     try {
-      document.documentElement.style.setProperty("--tint-top", avg(2));
-      document.documentElement.style.setProperty("--tint-bottom", avg(ch - 6));
+      const top = avg(2), bottom = avg(ch - 6);
+      const st = document.documentElement.style;
+      st.setProperty("--tint-top", top); st.setProperty("--tint-bottom", bottom);
+      document.querySelector('meta[name="theme-color"]')?.setAttribute("content", bottom);
     } catch { /* tainted canvas etc. */ }
   };
 
