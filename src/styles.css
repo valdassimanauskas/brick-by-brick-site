@@ -41,8 +41,10 @@ a { color: inherit; text-decoration: none; }
 html[data-bleed] { --bleed-top: 0px; --bleed-bottom: 136px; --bleed-offset: 0px; height: auto; overflow-y: scroll; overscroll-behavior-y: none; }
 html[data-bleed] body { height: auto; overflow: visible; min-height: var(--vvh, 100dvh); overscroll-behavior-y: none; }
 html[data-bleed] #root { position: static; height: auto; overflow: visible; }
-html[data-bleed] .hero .stage { top: 0; height: calc(var(--vvh, 100dvh) + var(--bleed-bottom)); }
-html[data-bleed] .hero-copy { padding-bottom: calc(var(--bleed-bottom) + 28px); }
+/* sized from the LARGE viewport (bars collapsed) so nothing re-fits while Safari's bars move */
+html[data-bleed] .hero { height: calc(100lvh * 2.4); }
+html[data-bleed] .hero .stage { top: 0; height: calc(100lvh + var(--bleed-bottom)); }
+html[data-bleed] .hero-copy { padding-bottom: calc((100lvh - 100svh) + var(--bleed-bottom) + 28px); } /* buttons clear the expanded bar on load */
 html[data-bleed] .hero .stage::after { background: linear-gradient(180deg, rgba(21,18,15,.55) 0%, rgba(21,18,15,.2) 18%, rgba(21,18,15,.05) 34%, rgba(21,18,15,.15) 52%, rgba(21,18,15,.62) 74%, rgba(21,18,15,.74) 88%, rgba(21,18,15,.74) 100%); }
 
 /* Light sections paint their own ground (body is dark so iOS Safari's bar fallback matches the hero) */

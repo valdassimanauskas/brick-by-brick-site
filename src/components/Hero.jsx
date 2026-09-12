@@ -84,8 +84,9 @@ export default function Hero() {
     const el = heroRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const vh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--vvh")) || innerHeight;
-    const p = reducedMotion() ? 1 : Math.min(1, Math.max(0, -r.top / (r.height - vh)));
+    // pinned range = hero height minus the sticky stage's own height (stable even while browser bars move)
+    const range = r.height - (stageRef.current?.offsetHeight || innerHeight);
+    const p = reducedMotion() ? 1 : Math.min(1, Math.max(0, -r.top / range));
     setProgress(p);
     setPhase(p < 0.34 ? 0 : p < 0.72 ? 1 : 2);
     draw(p);
